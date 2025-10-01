@@ -7,7 +7,7 @@ on:
         branches: [main]
 
 permissions:
-    contents: read
+    contents: write
     pages: write
     id-token: write
 
@@ -35,16 +35,14 @@ jobs:
               run: |
                   cd dapp
                   # Create .env file with necessary environment variables
-                  echo "VITE_PUBLIC_URL='https://dev1line.github.io/nft-factory'" > .env
-                  echo "VITE_REACT_APP_TITLE='NFT Factory'" >> .env
+                  echo "VITE_PUBLIC_URL=https://dev1line.github.io/nft-factory" > .env
+                  echo "VITE_REACT_APP_TITLE=NFT Factory" >> .env
                   GH_PAGES=true yarn build
 
-            - name: Prepare for deployment
+            - name: Add .nojekyll
               run: |
-                  # Copy .nojekyll to disable Jekyll processing
-                  cp .nojekyll dapp/dist/
-                  # Verify the file was copied
-                  ls -la dapp/dist/.nojekyll
+                  touch dapp/dist/.nojekyll
+                  ls -la dapp/dist
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v4
