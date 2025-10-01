@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
 import inject from "@rollup/plugin-inject";
-import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
+import { viteCommonjs } from "@originjs/vite-plugin-commonjs";
 
 export default defineConfig({
   plugins: [react(), viteCommonjs()],
@@ -34,10 +34,12 @@ export default defineConfig({
   build: {
     target: "esnext",
     rollupOptions: {
-      plugins: [inject({ 
-        Buffer: ["buffer", "Buffer"],
-        global: "globalThis",
-      })],
+      plugins: [
+        inject({
+          Buffer: ["buffer", "Buffer"],
+          global: "globalThis",
+        }),
+      ],
     },
     commonjsOptions: {
       transformMixedEsModules: true,
