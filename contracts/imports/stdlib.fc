@@ -616,7 +616,10 @@ int get_seed() impure asm "RANDSEED";
 () randomize(int x) impure asm "ADDRAND";
 ;;; Equivalent to randomize(cur_lt());.
 () randomize_lt() impure asm "LTIME" "ADDRAND";
-
+;;; Checks if two slices are equal.
 int equal_slices(slice a, slice b) asm "SDEQ";
+;;; Checks if a builder is null.
 int builder_null?(builder b) asm "ISNULL";
+builder store_builder(builder to, builder from) asm "STBR";
+;;; Stores a builder into a builder.
 builder store_builder(builder to, builder from) asm "STBR";

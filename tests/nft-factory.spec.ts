@@ -24,7 +24,12 @@ describe('NFT Factory and Collection', () => {
     beforeEach(async () => {
         blockchain = await Blockchain.create();
         deployer = await blockchain.treasury('deployer');
-        nftFactory = blockchain.openContract(NftFactory.createFromConfig({ index: 0, ownerAddress: deployer.address, nftCollectionCode: nftCollectionCode, }, nftFactoryCode));
+        nftFactory = blockchain.openContract(
+            NftFactory.createFromConfig(
+                { index: 0, ownerAddress: deployer.address, nftCollectionCode: nftCollectionCode },
+                nftFactoryCode,
+            ),
+        );
         const deploynftFactoryResult = await nftFactory.sendDeploy(deployer.getSender(), toNano('0.05'));
         printTransactionFees(deploynftFactoryResult.transactions);
         expect(deploynftFactoryResult.transactions).toHaveTransaction({
@@ -32,11 +37,20 @@ describe('NFT Factory and Collection', () => {
             to: nftFactory.address,
             success: true,
         });
-        console.log("NFT Factory address: ", nftFactory.address);
+        console.log('NFT Factory address: ', nftFactory.address);
         const deployCollectionResult = await nftFactory.sendDeployNFTCollection(
-            deployer.getSender(), toNano('0.1'), 0, nftItemCode,
-            "Hello World Collection", "New Collection", "https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png",
-            5, 100, deployer.address, deployer.address);
+            deployer.getSender(),
+            toNano('0.1'),
+            0,
+            nftItemCode,
+            'Hello World Collection',
+            'New Collection',
+            'https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png',
+            5,
+            100,
+            deployer.address,
+            deployer.address,
+        );
         const collectionAddress = await nftFactory.getCollectionAddress(BigInt(0));
         expect(deployCollectionResult.transactions).toHaveTransaction({
             from: deployer.address,
@@ -49,12 +63,21 @@ describe('NFT Factory and Collection', () => {
             success: true,
             deploy: true,
         });
-        console.log("NFT Collection address: ", collectionAddress);
+        console.log('NFT Collection address: ', collectionAddress);
 
         const deployCollection2Result = await nftFactory.sendDeployNFTCollection(
-            deployer.getSender(), toNano('0.1'), 1, nftItemCode,
-            "Hello World Collection", "New Collection", "https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png",
-            5, 100, deployer.address, deployer.address);
+            deployer.getSender(),
+            toNano('0.1'),
+            1,
+            nftItemCode,
+            'Hello World Collection',
+            'New Collection',
+            'https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png',
+            5,
+            100,
+            deployer.address,
+            deployer.address,
+        );
         const collection2Address = await nftFactory.getCollectionAddress(BigInt(1));
         expect(deployCollection2Result.transactions).toHaveTransaction({
             from: deployer.address,
@@ -67,15 +90,20 @@ describe('NFT Factory and Collection', () => {
             success: true,
             deploy: true,
         });
-        console.log("Second NFT Collection address: ", collection2Address);
+        console.log('Second NFT Collection address: ', collection2Address);
 
         nftCollection = blockchain.openContract(NftCollection.createFromAddress(collectionAddress));
     });
     it('Empty test', async () => {});
+
     it('should allow whitelisted user to mint multiple times', async () => {
         const whitelistedUser = await blockchain.treasury('whitelisted');
         // Add user to whitelist
-        const sendAddToWhitelistResult = await nftCollection.sendAddToWhitelist(deployer.getSender(), toNano('0.05'), whitelistedUser.address);
+        const sendAddToWhitelistResult = await nftCollection.sendAddToWhitelist(
+            deployer.getSender(),
+            toNano('0.05'),
+            whitelistedUser.address,
+        );
         expect(sendAddToWhitelistResult.transactions).toHaveTransaction({
             from: deployer.address,
             to: nftCollection.address,
@@ -83,31 +111,77 @@ describe('NFT Factory and Collection', () => {
         });
         expect(await nftCollection.getUserStatus(whitelistedUser.address)).toStrictEqual(UserStatus.IsWhitelisted);
         // Mint first NFT
-        const mintResult1 = await nftCollection.sendMintNft(whitelistedUser.getSender(), toNano('0.1'), 0, toNano('0.1'), 0, whitelistedUser.address,
-        "Hello World", "New Item", "https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png");
-        expect(mintResult1.transactions).toHaveTransaction({ from: whitelistedUser.address, to: nftCollection.address, success: true, });
+        const mintResult1 = await nftCollection.sendMintNft(
+            whitelistedUser.getSender(),
+            toNano('0.1'),
+            0,
+            toNano('0.1'),
+            0,
+            whitelistedUser.address,
+            'Hello World',
+            'New Item',
+            'https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png',
+        );
+        expect(mintResult1.transactions).toHaveTransaction({
+            from: whitelistedUser.address,
+            to: nftCollection.address,
+            success: true,
+        });
         const Nft1Address = await nftCollection.getNftAddressByIndex(BigInt(0));
-        console.log("NFT #0 address: ", Nft1Address);
-        expect(mintResult1.transactions).toHaveTransaction({ from: nftCollection.address, to: Nft1Address, success: true, deploy: true, });
+        console.log('NFT #0 address: ', Nft1Address);
+        expect(mintResult1.transactions).toHaveTransaction({
+            from: nftCollection.address,
+            to: Nft1Address,
+            success: true,
+            deploy: true,
+        });
         // Mint second NFT
-        const mintResult2 = await nftCollection.sendMintNft(whitelistedUser.getSender(), toNano('0.1'), 1, toNano('0.1'), 0, whitelistedUser.address,
-        "Hello World", "New Item", "https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png");
-        expect(mintResult2.transactions).toHaveTransaction({ from: whitelistedUser.address, to: nftCollection.address, success: true, });
+        const mintResult2 = await nftCollection.sendMintNft(
+            whitelistedUser.getSender(),
+            toNano('0.1'),
+            1,
+            toNano('0.1'),
+            0,
+            whitelistedUser.address,
+            'Hello World',
+            'New Item',
+            'https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png',
+        );
+        expect(mintResult2.transactions).toHaveTransaction({
+            from: whitelistedUser.address,
+            to: nftCollection.address,
+            success: true,
+        });
         const Nft2Address = await nftCollection.getNftAddressByIndex(BigInt(1));
-        console.log("NFT #1 address: ", Nft2Address);
-        expect(mintResult2.transactions).toHaveTransaction({ from: nftCollection.address, to: Nft2Address, success: true, deploy: true, });
+        console.log('NFT #1 address: ', Nft2Address);
+        expect(mintResult2.transactions).toHaveTransaction({
+            from: nftCollection.address,
+            to: Nft2Address,
+            success: true,
+            deploy: true,
+        });
         // Check collection data
         const collectionData = await nftCollection.getCollectionData();
         expect(collectionData.nextItemIndex).toEqual(2);
     });
+
     it('should prevent blacklisted user from minting', async () => {
         const blacklistedUser = await blockchain.treasury('blacklisted');
         // Add user to blacklist
         await nftCollection.sendAddToBlacklist(deployer.getSender(), toNano('0.05'), blacklistedUser.address);
         expect(await nftCollection.getUserStatus(blacklistedUser.address)).toStrictEqual(UserStatus.IsBlacklisted);
         // Attempt to mint
-        const mintResult = await nftCollection.sendMintNft(blacklistedUser.getSender(), toNano('0.1'), 0, toNano('0.1'), 0, blacklistedUser.address,
-        "Hello World", "New Item", "https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png");
+        const mintResult = await nftCollection.sendMintNft(
+            blacklistedUser.getSender(),
+            toNano('0.1'),
+            0,
+            toNano('0.1'),
+            0,
+            blacklistedUser.address,
+            'Hello World',
+            'New Item',
+            'https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png',
+        );
         expect(mintResult.transactions).toHaveTransaction({
             from: blacklistedUser.address,
             to: nftCollection.address,
@@ -122,16 +196,48 @@ describe('NFT Factory and Collection', () => {
     it('should allow normal user to mint only once', async () => {
         const normalUser = await blockchain.treasury('normal');
         // First mint should succeed
-        const mintResult1 = await nftCollection.sendMintNft(normalUser.getSender(), toNano('0.1'), 0, toNano('0.1'), 0, normalUser.address,
-        "Hello World", "New Item", "https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png");
-        expect(mintResult1.transactions).toHaveTransaction({ from: normalUser.address, to: nftCollection.address, success: true, });
+        const mintResult1 = await nftCollection.sendMintNft(
+            normalUser.getSender(),
+            toNano('0.1'),
+            0,
+            toNano('0.1'),
+            0,
+            normalUser.address,
+            'Hello World',
+            'New Item',
+            'https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png',
+        );
+        expect(mintResult1.transactions).toHaveTransaction({
+            from: normalUser.address,
+            to: nftCollection.address,
+            success: true,
+        });
         const Nft1Address = await nftCollection.getNftAddressByIndex(BigInt(0));
-        console.log("NFT #0 address: ", Nft1Address);
-        expect(mintResult1.transactions).toHaveTransaction({ from: nftCollection.address, to: Nft1Address, success: true, deploy: true, });
+        console.log('NFT #0 address: ', Nft1Address);
+        expect(mintResult1.transactions).toHaveTransaction({
+            from: nftCollection.address,
+            to: Nft1Address,
+            success: true,
+            deploy: true,
+        });
         // Second mint should fail
-        const mintResult2 = await nftCollection.sendMintNft(normalUser.getSender(), toNano('0.1'), 0, toNano('0.1'), 0, normalUser.address,
-        "Hello World", "New Item", "https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png");
-        expect(mintResult2.transactions).toHaveTransaction({ from: normalUser.address, to: nftCollection.address, success: false, exitCode: 404});
+        const mintResult2 = await nftCollection.sendMintNft(
+            normalUser.getSender(),
+            toNano('0.1'),
+            0,
+            toNano('0.1'),
+            0,
+            normalUser.address,
+            'Hello World',
+            'New Item',
+            'https://raw.githubusercontent.com/Cosmodude/TAP/main/HackTonBerFest.png',
+        );
+        expect(mintResult2.transactions).toHaveTransaction({
+            from: normalUser.address,
+            to: nftCollection.address,
+            success: false,
+            exitCode: 404,
+        });
         // Check collection data
         const collectionData = await nftCollection.getCollectionData();
         expect(collectionData.nextItemIndex).toEqual(1);
