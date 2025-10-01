@@ -34,9 +34,8 @@ jobs:
             - name: Build
               run: |
                   cd dapp
-                  # Create .env file with necessary environment variables
-                  echo "VITE_PUBLIC_URL=https://dev1line.github.io/nft-factory" > .env
-                  echo "VITE_REACT_APP_TITLE=NFT Factory" >> .env
+                  # Create .env file with app title only (base URL handled by vite.config.ts)
+                  echo "VITE_REACT_APP_TITLE=NFT Factory" > .env
                   GH_PAGES=true yarn build
 
             - name: Add .nojekyll and verify files
@@ -57,4 +56,3 @@ jobs:
                   publish_dir: ./dapp/dist
                   force_orphan: true
                   enable_jekyll: false
-                  cname: false
