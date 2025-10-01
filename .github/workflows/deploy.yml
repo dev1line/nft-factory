@@ -34,8 +34,11 @@ jobs:
             - name: Build
               run: |
                   cd dapp
+                  # Create .env file with necessary environment variables
+                  echo "VITE_PUBLIC_URL='https://dev1line.github.io/nft-factory'" > .env
+                  echo "VITE_REACT_APP_TITLE='NFT Factory'" >> .env
                   GH_PAGES=true yarn build
-                  
+
             - name: Prepare for deployment
               run: |
                   # Copy .nojekyll to disable Jekyll processing

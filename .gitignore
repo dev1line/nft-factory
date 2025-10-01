@@ -21,6 +21,10 @@ dapp/.env.development.local
 dapp/.env.test.local
 dapp/.env.production.local
 
+# Allow environment templates
+!.env.example
+!dapp/.env.example
+
 # Logs
 npm-debug.log*
 yarn-debug.log*
