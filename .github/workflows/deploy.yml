@@ -39,10 +39,15 @@ jobs:
                   echo "VITE_REACT_APP_TITLE=NFT Factory" >> .env
                   GH_PAGES=true yarn build
 
-            - name: Add .nojekyll
+            - name: Add .nojekyll and verify files
               run: |
                   touch dapp/dist/.nojekyll
-                  ls -la dapp/dist
+                  echo "Verifying important files exist:"
+                  ls -la dapp/dist/
+                  echo "Checking tonconnect-manifest.json:"
+                  cat dapp/dist/tonconnect-manifest.json
+                  echo "Checking .nojekyll:"
+                  ls -la dapp/dist/.nojekyll
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v4
@@ -52,3 +57,4 @@ jobs:
                   publish_dir: ./dapp/dist
                   force_orphan: true
                   enable_jekyll: false
+                  cname: false
