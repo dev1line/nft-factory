@@ -4,18 +4,47 @@ New version of [ton_nft_dapp](https://github.com/gradoally/ton_nft_dapp) that ca
 
 ## How to use
 
+### Quick Setup
+
 ```bash
 git clone https://github.com/gradoally/ton-nft-dapp.git
-npm i
+cd ton-nft-dapp
+./setup.sh
 ```
 
-Deploy through script:
+Or manually:
 
 ```bash
+git clone https://github.com/gradoally/ton-nft-dapp.git
+cd ton-nft-dapp
+yarn install  # Automatically applies Blueprint patches
+```
+
+📖 **For detailed setup instructions, see [SETUP.md](./SETUP.md)**
+
+### TON Connect Configuration
+
+This project uses a custom TON Connect manifest URL:
+
+```
+https://dev1line.github.io/nft-factory/tonconnect-manifest.json
+```
+
+To use a different manifest URL:
+
+```bash
+TONCONNECT_MANIFEST_URL=https://your-url.com/manifest.json yarn run start
+```
+
+### Deploy through script:
+
+```bash
+yarn run start
+# or
 npx blueprint run
 ```
 
-Deploy through Scaffold:
+### Deploy through Scaffold:
 
 ```bash
 cd dapp && yarn && yarn dev
