@@ -11,7 +11,7 @@ import "./patch-local-storage-for-github-pages";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
-  <TonConnectUIProvider manifestUrl="https://dev1line.github.io/ton-nft-dapp/tonconnect-manifest.json">
+  <TonConnectUIProvider manifestUrl="https://dev1line.github.io/nft-factory/tonconnect-manifest.json">
     <App />
   </TonConnectUIProvider>,
 );

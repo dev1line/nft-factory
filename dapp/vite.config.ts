@@ -5,7 +5,7 @@ import inject from "@rollup/plugin-inject";
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.GH_PAGES ? "/ton-nft-dapp/" : "./",
+  base: process.env.GH_PAGES ? "/nft-factory/" : "./",
   optimizeDeps: {
     esbuildOptions: {
       define: {
